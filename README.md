@@ -19,13 +19,25 @@ Sample HomeBridge Configuration
       "description": "",
 
       "accessories": [
-				{
+        {
           "accessory": "mqtt-temperature",
           "name": "Living Room Temperature",
           "url": "mqtt://localhost",
-          "topic": "home/livingroom/temperature"
-    		}
+          "topic": "home/livingroom/temperature",
+          "username": "username",
+          "password": "password"
+        }
       ],
 
       "platforms": []
     }
+
+
+---------------------
+#### Credits
+
+[homebridge-mqttswitch](https://github.com/ilcato/homebridge-mqttswitch)
+
+[homebridge-mqttgaragedoor](https://github.com/tvillingett/homebridge-mqttgaragedoor)
+
+[homebridge-ds18b20](https://github.com/DanTheMan827/homebridge-ds18b20)
