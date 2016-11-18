@@ -1,6 +1,6 @@
 {
   "name": "homebridge-mqtt-temperature",
-  "version": "0.1.2",
+  "version": "0.2.0",
   "description": "A HomeBridge plugin for MQTT temperature sensors.",
   "main": "index.js",
   "scripts": {
@@ -15,7 +15,9 @@
     "README.md"
   ],
   "keywords": [
-    "homebridge-plugin","mqtt","temperature"
+    "homebridge-plugin",
+    "mqtt",
+    "temperature"
   ],
   "engines": {
     "node": ">=0.12.0",
