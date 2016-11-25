@@ -1,6 +1,6 @@
 {
   "name": "homebridge-mqtt-temperature",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "A HomeBridge plugin for MQTT temperature sensors.",
   "main": "index.js",
   "scripts": {
