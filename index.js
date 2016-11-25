@@ -42,7 +42,8 @@ function TemperatureAccessory(log, config) {
     data = JSON.parse(message);
     if (data === null) {return null}
     that.temperature = parseFloat(data);
-//    that.log("that.MQTT Temperature: " , that.temperature);
+    that.service
+      .setCharacteristic(Characteristic.CurrentTemperature, that.temperature);
 
 });
 
