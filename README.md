@@ -39,8 +39,11 @@ Sample HomeBridge Configuration
 ---------------------
 
 `maxTemperature` and `minTemperature` allow you to change the default high and low temperatures.
+
 `serial` allows you to change the serial number to a custom value if you need it.
-all three are optional as well as `username` and `password` if you don't use MQTT authentication.
+
+All three are optional as well as `username` and `password` if you don't use MQTT authentication.
+
 
 #### Credits
 
