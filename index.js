@@ -7,7 +7,11 @@ module.exports = function(homebridge) {
   homebridge.registerAccessory("homebridge-mqtt-temperature", "mqtt-temperature", TemperatureAccessory);
 }
 
+
 function TemperatureAccessory(log, config) {
+
+
+
   this.log = log;
   this.name = config["name"];
   this.url = config['url'];
@@ -21,24 +25,30 @@ function TemperatureAccessory(log, config) {
 		clean: true,
 		reconnectPeriod: 1000,
 		connectTimeout: 30 * 1000,
+    serialnumber: config["serial"] || this.client_Id,
+    max_temperature: config["maxTemperature"] || 100,
+    min_temperature: config["minTemperature"] || -50,
+		username: config["username"],
+		password: config["password"],
 		will: {
 			topic: 'WillMsg',
 			payload: 'Connection Closed abnormally..!',
 			qos: 0,
 			retain: false
 		},
-		username: config["username"],
-		password: config["password"],
 		rejectUnauthorized: false
 	};
 
+
   this.service = new Service.TemperatureSensor(this.name);
   this.client  = mqtt.connect(this.url, this.options);
+
+
   var that = this;
     this.client.subscribe(this.topic);
- 
+
   this.client.on('message', function (topic, message) {
-    // message is Buffer 
+    // message is Buffer
     data = JSON.parse(message);
     if (data === null) {return null}
     that.temperature = parseFloat(data);
@@ -47,17 +57,18 @@ function TemperatureAccessory(log, config) {
 
 });
 
+
   this.service
     .getCharacteristic(Characteristic.CurrentTemperature)
     .on('get', this.getState.bind(this));
-		
+
   this.service
     .getCharacteristic(Characteristic.CurrentTemperature)
-    .setProps({minValue: -50});
-                                                
+    .setProps({minValue: this.options["min_temperature"]});
+
   this.service
     .getCharacteristic(Characteristic.CurrentTemperature)
-    .setProps({maxValue: 100});
+    .setProps({maxValue: this.options["max_temperature"]});
 
 }
 
@@ -67,6 +78,14 @@ TemperatureAccessory.prototype.getState = function(callback) {
 }
 
 TemperatureAccessory.prototype.getServices = function() {
-  return [this.service];
-}
+  // you can OPTIONALLY create an information service if you wish to override
+  // the default values for things like serial number, model, etc.
 
+  var informationService = new Service.AccessoryInformation();
+  informationService
+    .setCharacteristic(Characteristic.Manufacturer, "MQTT Sensor")
+    .setCharacteristic(Characteristic.Model, "MQTT Temperature")
+    .setCharacteristic(Characteristic.SerialNumber, this.options["serialnumber"]);
+
+  return [informationService, this.service];
+}

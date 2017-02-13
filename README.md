@@ -25,7 +25,10 @@ Sample HomeBridge Configuration
           "url": "mqtt://localhost",
           "topic": "home/livingroom/temperature",
           "username": "username",
-          "password": "password"
+          "password": "password",
+          "maxTemperature": "200",
+          "minTemperature": "-5",
+          "serial": "HMT-34932B"
         }
       ],
 
@@ -34,6 +37,11 @@ Sample HomeBridge Configuration
 
 
 ---------------------
+
+`maxTemperature` and `minTemperature` allow you to change the default high and low temperatures.
+`serial` allows you to change the serial number to a custom value if you need it.
+all three are optional as well as `username` and `password` if you don't use MQTT authentication.
+
 #### Credits
 
 [homebridge-mqttswitch](https://github.com/ilcato/homebridge-mqttswitch)
