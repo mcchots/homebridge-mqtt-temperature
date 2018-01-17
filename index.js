@@ -7,10 +7,7 @@ module.exports = function(homebridge) {
   homebridge.registerAccessory("homebridge-mqtt-temperature", "mqtt-temperature", TemperatureAccessory);
 }
 
-
 function TemperatureAccessory(log, config) {
-
-
 
   this.log = log;
   this.name = config["name"];
@@ -39,24 +36,29 @@ function TemperatureAccessory(log, config) {
 		rejectUnauthorized: false
 	};
 
-
   this.service = new Service.TemperatureSensor(this.name);
   this.client  = mqtt.connect(this.url, this.options);
-
 
   var that = this;
     this.client.subscribe(this.topic);
 
   this.client.on('message', function (topic, message) {
     // message is Buffer
-    data = JSON.parse(message);
+    try {
+      data = JSON.parse(message);
+    } catch (e) {
+      return null;
+    }
+
     if (data === null) {return null}
+    log('data: ' + data);
     that.temperature = parseFloat(data);
-    that.service
-      .setCharacteristic(Characteristic.CurrentTemperature, that.temperature);
-
-});
-
+    log('that.temperature: ' + that.temperature);
+    if (!isNaN(that.temperature)) {
+      that.service
+        .setCharacteristic(Characteristic.CurrentTemperature, that.temperature);
+    }
+  });
 
   this.service
     .getCharacteristic(Characteristic.CurrentTemperature)
