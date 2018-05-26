@@ -45,6 +45,16 @@ function TemperatureAccessory(log, config) {
 })
     .on('get', this.getState.bind(this));
 
+    this.service.addCharacteristic(Characteristic.BatteryLevel)
+      .on('get', function(callback) {
+        callback(null, 78);
+    });
+
+    this.service.addCharacteristic(Characteristic.StatusLowBattery)
+    .on('get', function(callback) {
+      callback(null, 0);
+    });
+
   this.client  = mqtt.connect(this.url, this.options);
 
   var that = this;
@@ -74,6 +84,7 @@ TemperatureAccessory.prototype.getState = function(callback) {
         this.log(this.name, " - MQTT : ", this.temperature);
     callback(null, this.temperature);
 }
+
 
 TemperatureAccessory.prototype.getServices = function() {
   // you can OPTIONALLY create an information service if you wish to override
