@@ -34,13 +34,21 @@ function TemperatureAccessory(log, config) {
 			retain: false
 		},
 		rejectUnauthorized: false
-	};
-
+    };
+    
   this.service = new Service.TemperatureSensor(this.name);
+
+  this.service
+    .getCharacteristic(Characteristic.CurrentTemperature)
+    .setProps({minValue: parseFloat(this.options["min_temperature"]),
+               maxValue: parseFloat(this.options["max_temperature"])
+})
+    .on('get', this.getState.bind(this));
+
   this.client  = mqtt.connect(this.url, this.options);
 
   var that = this;
-    this.client.subscribe(this.topic);
+  this.client.subscribe(this.topic);
 
   this.client.on('message', function (topic, message) {
     // message is Buffer
@@ -56,21 +64,9 @@ function TemperatureAccessory(log, config) {
     log('that.temperature: ' + that.temperature);
     if (!isNaN(that.temperature)) {
       that.service
-        .setCharacteristic(Characteristic.CurrentTemperature, that.temperature);
+        .getCharacteristic(Characteristic.CurrentTemperature).updateValue(that.temperature);
     }
   });
-
-  this.service
-    .getCharacteristic(Characteristic.CurrentTemperature)
-    .on('get', this.getState.bind(this));
-
-  this.service
-    .getCharacteristic(Characteristic.CurrentTemperature)
-    .setProps({minValue: this.options["min_temperature"]});
-
-  this.service
-    .getCharacteristic(Characteristic.CurrentTemperature)
-    .setProps({maxValue: this.options["max_temperature"]});
 
 }
 
