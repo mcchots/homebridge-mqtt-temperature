@@ -23,11 +23,13 @@ Sample HomeBridge Configuration
           "accessory": "mqtt-temperature",
           "name": "Living Room Temperature",
           "url": "mqtt://localhost",
-          "topic": "home/livingroom/temperature",
+          "topic": "home/livingroom/temperature/value",
+          "batt_topic: "home/livingroom/temperature/battery",
+          "batt_low_perc": "33",
           "username": "username",
           "password": "password",
-          "maxTemperature": "200",
-          "minTemperature": "-5",
+          "maxTemperature": "75",
+          "minTemperature": "-25",
           "serial": "HMT-34932B"
         }
       ],
@@ -39,10 +41,10 @@ Sample HomeBridge Configuration
 ---------------------
 
 `maxTemperature` and `minTemperature` allow you to change the default high and low temperatures.
-
 `serial` allows you to change the serial number to a custom value if you need it.
+`batt_topic` and `bat_low_perc` are for battery powered sensors. `batt_low_perc` overrides the default 20% value.
 
-All three are optional as well as `username` and `password` if you don't use MQTT authentication.
+All are optional as well as `username` and `password` if you don't use MQTT authentication.
 
 
 #### Credits
