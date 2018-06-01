@@ -25,6 +25,7 @@ Sample HomeBridge Configuration
           "url": "mqtt://localhost",
           "topic": "home/livingroom/temperature/value",
           "batt_topic: "home/livingroom/temperature/battery",
+          "charge_topic": "home/livingroom/temperature/charge",
           "batt_low_perc": "33",
           "username": "username",
           "password": "password",
@@ -42,9 +43,9 @@ Sample HomeBridge Configuration
 
 `maxTemperature` and `minTemperature` allow you to change the default high and low temperatures.
 `serial` allows you to change the serial number to a custom value if you need it.
-`batt_topic` and `bat_low_perc` are for battery powered sensors. `batt_low_perc` overrides the default 20% value.
+`batt_topic`, `charge_topic` and `bat_low_perc` are for battery powered sensors. `batt_low_perc` overrides the default 20% value. `charge_topic` is for charging state. It requires values of either 0 or 1 for off and on respectively.
 
-All are optional as well as `username` and `password` if you don't use MQTT authentication.
+All six are optional including `username` and `password` if you don't use MQTT authentication.
 
 
 #### Credits

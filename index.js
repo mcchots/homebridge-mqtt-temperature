@@ -1,6 +1,5 @@
 var Service, Characteristic;
 var mqtt    = require('mqtt');
-var debug = require('debug')('mqtt-temperature');
 
 module.exports = function(homebridge) {
   Service = homebridge.hap.Service;
@@ -9,12 +8,12 @@ module.exports = function(homebridge) {
 }
 
 function TemperatureAccessory(log, config) {
-
   this.log = log;
   this.name = config["name"];
   this.url = config['url'];
   this.topic = config['topic'];
   this.batt_topic = config['batt_topic'];
+  this.charge_topic = config['charge_topic'];
   this.batt_low_perc = config['batt_low_perc'] || 20;
   this.client_Id 		= 'mqttjs_' + Math.random().toString(16).substr(2, 8);
   this.options = {
@@ -48,6 +47,7 @@ function TemperatureAccessory(log, config) {
     .on('get', this.getState.bind(this));
 
   this.client  = mqtt.connect(this.url, this.options);
+  this.client.subscribe(this.topic);
 
   if (this.batt_topic) {
       this.service.addCharacteristic(Characteristic.BatteryLevel)
@@ -59,7 +59,12 @@ function TemperatureAccessory(log, config) {
     this.client.subscribe(this.batt_topic);
   }
 
-  this.client.subscribe(this.topic);
+  if (this.charge_topic){
+    this.service.addCharacteristic(Characteristic.ChargingState)
+    .on('get', this.getChargingState.bind(this));
+
+    this.client.subscribe(this.charge_topic);
+  }
   var that = this;
 
   //that.lowBattery = true;
@@ -78,14 +83,14 @@ function TemperatureAccessory(log, config) {
 
       if (topic === that.topic) { 
         that.temperature = data;
-        debug('Sending MQTT.Temperature: ' + that.temperature);
+        that.log.debug('Sending MQTT.Temperature: ' + that.temperature);
         that.service
           .getCharacteristic(Characteristic.CurrentTemperature).updateValue(that.temperature);
       }
       if (that.batt_topic) {
         if (topic === that.batt_topic) { 
           that.battery = data;
-          debug('Sending MQTT.Battery: ' + that.battery);
+          that.log.debug('Sending MQTT.Battery: ' + that.battery);
           that.service
             .getCharacteristic(Characteristic.BatteryLevel).updateValue(that.battery);
           
@@ -96,23 +101,35 @@ function TemperatureAccessory(log, config) {
           
         }
       }
+      if (topic == that.charge_topic){
+        that.chargingState = data;
+        that.log.debug('Sending MQTT.BattChargingState: ' + that.chargingState);
+        that.service
+          .getCharacteristic(Characteristic.ChargingState).updateValue(that.chargingState);
+  
+      }
     }
   });
 
 }
 
 TemperatureAccessory.prototype.getState = function(callback) {
-  debug("Get Temperature Called: " + this.temperature);
+  this.log.debug("Get Temperature Called: " + this.temperature);
   callback(null, this.temperature);
 }
 
 TemperatureAccessory.prototype.getBattery = function(callback) {
-  debug("Get Battery Called: " + this.battery);
+  this.log.debug("Get Battery Called: " + this.battery);
   callback(null, this.battery);
 }
 TemperatureAccessory.prototype.getLowBattery = function(callback) {
-  debug("Get Low Battery Status: " + this.lowBattery);
+  this.log.debug("Get Low Battery Status: " + this.lowBattery);
   callback(null, this.lowBattery);
+}
+
+TemperatureAccessory.prototype.getChargingState = function(callback) {
+  this.log.debug("Get Charging Status: " + this.chargingState);
+  callback(null, this.chargingState);
 }
 
 TemperatureAccessory.prototype.getServices = function() {
