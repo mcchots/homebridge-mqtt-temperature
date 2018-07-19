@@ -24,7 +24,7 @@ Sample HomeBridge Configuration
           "name": "Living Room Temperature",
           "url": "mqtt://localhost",
           "topic": "home/livingroom/temperature/value",
-          "batt_topic: "home/livingroom/temperature/battery",
+          "batt_topic": "home/livingroom/temperature/battery",
           "charge_topic": "home/livingroom/temperature/charge",
           "batt_low_perc": "33",
           "username": "username",
