@@ -116,7 +116,6 @@ function TemperatureAccessory(log, config) {
 
 TemperatureAccessory.prototype.getState = function(callback) {
   this.log.debug("Get Temperature Called: " + this.temperature);
-  var that = this;
   // request the temperature from the sensor
   if(this.topic_get) {
     this.client.publish(this.topic_get, null, null, function(error, packet) {
