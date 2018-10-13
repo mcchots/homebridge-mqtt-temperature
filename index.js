@@ -12,11 +12,11 @@ function TemperatureAccessory(log, config) {
   this.name = config["name"];
   this.url = config['url'];
   this.topic = config['topic'];
-  this.topic_get = config['topic_get'];
+  this.refresh_topic = config['refresh_topic'];
   this.batt_topic = config['batt_topic'];
   this.charge_topic = config['charge_topic'];
   this.batt_low_perc = config['batt_low_perc'] || 20;
-  this.client_Id 		= 'mqttjs_' + Math.random().toString(16).substr(2, 8);
+  this.client_Id = 'mqttjs_' + Math.random().toString(16).substr(2, 8);
   this.options = {
     keepalive: 10,
     clientId: this.client_Id,
@@ -117,13 +117,13 @@ function TemperatureAccessory(log, config) {
 TemperatureAccessory.prototype.getState = function(callback) {
   this.log.debug("Get Temperature Called: " + this.temperature);
   
-  if(!this.topic_get) {
+  if(!this.refresh_topic) {
     callback(null, this.temperature);
     return;
   }
 
   // request the temperature from the sensor
-  this.client.publish(this.topic_get, null, null, function(error, packet) {
+  this.client.publish(this.refresh_topic, null, null, function(error, packet) {
     callback(null, this.temperature);
   })
   
