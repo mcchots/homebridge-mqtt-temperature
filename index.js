@@ -116,12 +116,17 @@ function TemperatureAccessory(log, config) {
 
 TemperatureAccessory.prototype.getState = function(callback) {
   this.log.debug("Get Temperature Called: " + this.temperature);
-  // request the temperature from the sensor
-  if(this.topic_get) {
-    this.client.publish(this.topic_get, null, null, function(error, packet) {
-      callback(null, this.temperature);
-    })
+  
+  if(!this.topic_get) {
+    callback(null, this.temperature);
+    return;
   }
+
+  // request the temperature from the sensor
+  this.client.publish(this.topic_get, null, null, function(error, packet) {
+    callback(null, this.temperature);
+  })
+  
 }
 
 TemperatureAccessory.prototype.getBattery = function(callback) {
