@@ -98,8 +98,7 @@ function TemperatureAccessory(log, config) {
           (data <= that.batt_low_perc) ? that.lowBattery = true : that.lowBattery = false;
 
           that.service
-            .getCharacteristic(Characteristic.StatusLowBattery).updateValue(that.lowBattery);
-          
+            .getCharacteristic(Characteristic.StatusLowBattery).updateValue(that.lowBattery);          
         }
       }
       if (topic == that.charge_topic){
@@ -107,7 +106,6 @@ function TemperatureAccessory(log, config) {
         that.log.debug('Sending MQTT.BattChargingState: ' + that.chargingState);
         that.service
           .getCharacteristic(Characteristic.ChargingState).updateValue(that.chargingState);
-  
       }
     }
   });
@@ -126,7 +124,6 @@ TemperatureAccessory.prototype.getState = function(callback) {
   this.client.publish(this.refresh_topic, null, null, function(error, packet) {
     callback(null, this.temperature);
   })
-  
 }
 
 TemperatureAccessory.prototype.getBattery = function(callback) {
