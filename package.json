@@ -30,8 +30,7 @@
   },
   "homepage": "https://github.com/mcchots/homebridge-mqtt-temperature#readme",
   "dependencies": {
-    "mqtt": "^4.2",
-    "mqtt-packet": "^6.5"
+    "mqtt": "^4.2"
   },
   "devDependencies": {}
 }
